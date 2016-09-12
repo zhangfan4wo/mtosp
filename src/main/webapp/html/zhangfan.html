@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="http://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/vue/2.0.0-rc.4/vue.min.js"></script>
+<scrip src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></scrip>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<body>
+<div class="container" id="app">
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        1
+        <strong>Warning!</strong> 我是一个水果（提示框，或广告区）
+    </div>
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="input-group">
+                <input id="text" type="text" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" v-on:click="addURL(url)">添加网址监听</button>
+        <button class="btn btn-default" type="button" v-on:click="search">刷新监听列表</button>
+      </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-10 -->
+    </div><!-- /.row -->
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>id</td>
+            <td>url</td>
+            <td>状态</td>
+            <td>操作</td>
+            <td>删除网址</td>
+        </tr>
+        </thead>
+        <tboby>
+            <tr v-for="item in list">
+                <td>{{item.id}}</td>
+                <td>{{item.url}}</td>
+                <td>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <select name="T" v-bind:id="item.id" class="form-control">
+                                <option value="">停止</option>
+                            </select>
+                        </div><!-- /.col-lg-10 -->
+                    </div><!-- /.row -->
+                    </td>
+                <td>
+                    <button class="btn btn-default " type="button" v-on:click="jobid(item.id)" id="item.id,item.url" >执行</button>
+                    <button class="btn btn-default " type="button" v-on:click="stop(item.id)" id="item.url"  >停止</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" type="button" v-on:click="delect(item.id,item.url)">删除</button>
+                </td>
+            </tr>
+        </tboby>
+    </table>
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        1
+        <strong>Warning!</strong> 我是一个水果（提示框，或广告区）
+    </div>
+</div>
+<script>
+
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            list: [],
+            url: {},
+            id: {},
+            Y:"执行",
+            N:"停止"
+        },
+        methods: {
+            search: function () {
+                api.search();
+            },
+            addURL: function (url) {
+                console.info(url);
+                var url = $("#text").val().toString();
+                if (url == "") {
+                    alert("请输入网址！");
+                    console.info(1)
+                } else {
+                    api.addURL(url)
+                }
+            },
+            delect: function (id, url) {
+                api.delect(id, url)
+            },
+            jobid: function (id) {
+                api.jobid(id);
+            },
+            stop: function (id) {
+                api.stop(id);
+            }
+        }
+    });
+    var api = {
+        addURL: function (url) {
+            $.ajax({
+                type: 'post',
+                url: '/add',
+                data: {url: url},
+                error: function (requst) {
+                    alert("error")
+                },
+                success: function (data) {
+                    alert("已添加到列表，请点击刷新查看！");
+                    console.info(1)
+                }
+            })
+        },
+        search: function () {
+            $.ajax({
+                type: 'post',
+                url: "/demo",
+                datatype: 'json',
+
+                error: function (requst) {
+                    alert("error")
+                },
+                success: function (data) {
+                    console.info(data);
+                    vue.list = jQuery.parseJSON(data);
+                }
+            })
+        },
+        delect: function (id, url) {
+            $.ajax({
+                type: 'post',
+                url: "/del",
+                data: {id: id, url: url},
+                error: function (requst) {
+                    alert("error")
+                },
+                success: function (data) {
+                    alert("已经在列表中删除，请点击刷新！")
+                    console.info(1);
+                }
+            })
+        },
+        jobid: function (id) {
+            $.ajax({
+                type: 'post',
+                url: '/jobid',
+                data: {id: id},
+                error: function (requst) {
+                    alert("error")
+                },
+                success: function (data) {
+                    alert("监听成功！");
+                    console.info(data);
+                    $("#"+id).empty();
+                    $("#"+id).append("<option value=\"执行\">执行</option>");
+                    $("#"+id,url).hide();
+                }
+            })
+        },
+        stop: function (id) {
+            $.ajax({
+                type: 'post',
+                url: '/stop',
+                data: {id: id},
+                error: function (requst) {
+                    alert("error")
+                },
+                success: function (data) {
+                    console.info(data);
+                    alert("监听停止了！");
+                    $("#"+id).empty();
+                    $("#"+id).append("<option value=\"停止\">停止</option>");
+                }
+            })
+        }
+    };
+    api.search();
+</script>
+</body>
+</html>
