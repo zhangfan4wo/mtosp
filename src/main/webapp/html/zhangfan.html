@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+<script src="http://cdn.bootcss.com/highcharts/4.2.6/modules/exporting.src.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/vue/2.0.0-rc.4/vue.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <scrip src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></scrip>
 <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
 <body>
 <div class="container" id="app">
     <div class="alert alert-info alert-dismissible" role="alert">
@@ -19,14 +25,16 @@
     <div class="row">
         <div class="col-lg-10">
             <div class="input-group">
-                <input id="text" type="text" class="form-control">
+                <input id="text" type="text" class="form-control" value="http://">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="button" v-on:click="addURL(url)">添加网址监听</button>
-        <button class="btn btn-default" type="button" v-on:click="search">刷新监听列表</button>
+        <button class="btn btn-primary" type="button" v-on:click="addURL(url)" data-toggle="modal"
+                data-target="#myModal">添加网址监听
+        </button>
       </span>
             </div><!-- /input-group -->
         </div><!-- /.col-lg-10 -->
     </div><!-- /.row -->
+
 
     <table class="table table-striped">
         <thead>
@@ -46,17 +54,21 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <select name="T" v-bind:id="item.id" class="form-control">
-                                <option value="">停止</option>
+                                <option value="">NULL</option>
                             </select>
                         </div><!-- /.col-lg-10 -->
                     </div><!-- /.row -->
-                    </td>
-                <td>
-                    <button class="btn btn-default " type="button" v-on:click="jobid(item.id)" id="item.id,item.url" >执行</button>
-                    <button class="btn btn-default " type="button" v-on:click="stop(item.id)" id="item.url"  >停止</button>
                 </td>
                 <td>
-                    <button class="btn btn-danger" type="button" v-on:click="delect(item.id,item.url)">删除</button>
+                    <div class="btn-group" >
+                        <button class="btn btn-default " type="button" v-on:click="jobid(item.id)" >执行</button>
+                        <button class="btn btn-default " type="button" v-on:click="stop(item.id)" >停止</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-danger" type="button" v-on:click="delect(item.id,item.url)"
+                            data-toggle="modal" data-target="#myModal">删除
+                    </button>
                 </td>
             </tr>
         </tboby>
@@ -67,7 +79,39 @@
         1
         <strong>Warning!</strong> 我是一个水果（提示框，或广告区）
     </div>
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: center">
+                        监听执行
+                    </h4>
+                </div>
+                <div class="modal-body" style="text-align: center">
+                    您已经执行成功了！
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" class="btn btn-primary" v-on:click="search" data-dismiss="modal">
+                        确定提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div id="cont" style="min-width:500px;height:400px"></div>
+
 </div>
+
+
 <script>
 
     var vue = new Vue({
@@ -76,8 +120,6 @@
             list: [],
             url: {},
             id: {},
-            Y:"执行",
-            N:"停止"
         },
         methods: {
             search: function () {
@@ -94,13 +136,20 @@
                 }
             },
             delect: function (id, url) {
-                api.delect(id, url)
+                console.info($("#" + id).val(id));
+                if ($("#" + id).val(id) == "执行") {
+                    alert("请先停止执行任务！")
+                } else {
+                    api.delect(id, url)
+                }
             },
             jobid: function (id) {
                 api.jobid(id);
+
             },
             stop: function (id) {
                 api.stop(id);
+
             }
         }
     });
@@ -114,7 +163,6 @@
                     alert("error")
                 },
                 success: function (data) {
-                    alert("已添加到列表，请点击刷新查看！");
                     console.info(1)
                 }
             })
@@ -143,7 +191,6 @@
                     alert("error")
                 },
                 success: function (data) {
-                    alert("已经在列表中删除，请点击刷新！")
                     console.info(1);
                 }
             })
@@ -159,9 +206,8 @@
                 success: function (data) {
                     alert("监听成功！");
                     console.info(data);
-                    $("#"+id).empty();
-                    $("#"+id).append("<option value=\"执行\">执行</option>");
-                    $("#"+id,url).hide();
+                    $("#" + id).empty();
+                    $("#" + id).append("<option value=\"执行\">执行</option>");
                 }
             })
         },
@@ -176,13 +222,43 @@
                 success: function (data) {
                     console.info(data);
                     alert("监听停止了！");
-                    $("#"+id).empty();
-                    $("#"+id).append("<option value=\"停止\">停止</option>");
+                    $("#" + id).empty();
+                    $("#" + id).append("<option value=\"停止\">停止</option>");
                 }
             })
         }
     };
     api.search();
+
+    $(function () {
+        $('#container').highcharts({
+
+            title: {
+                text: 'Logarithmic axis demo'
+            },
+
+            xAxis: {
+                tickInterval: 1
+            },
+
+            yAxis: {
+                type: 'logarithmic',
+                minorTickInterval: 0.1
+            },
+
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br />',
+                pointFormat: 'x = {point.x}, y = {point.y}'
+            },
+
+            series: [{
+                data: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
+                pointStart: 1
+            }]
+        });
+    });
+
+
 </script>
 </body>
 </html>

@@ -65,6 +65,10 @@ public class DemoController {
     @ResponseBody
     public void delect(Integer id,String url){
         delectNoDao.delectNo(id,url);
+        if (timerList.get(id.toString())!=null){
+            timerList.get(id.toString()).cancel();
+            timerList.remove(id.toString());
+        }
     }
 
     @RequestMapping("jobid")
@@ -85,7 +89,7 @@ public class DemoController {
     @RequestMapping("stop")
     @ResponseBody
     public void stoprun(Integer id) {
-        if (timerList!=null){
+        if (timerList.get(id.toString())!=null){
             timerList.get(id.toString()).cancel();
             timerList.remove(id.toString());
         }else {
