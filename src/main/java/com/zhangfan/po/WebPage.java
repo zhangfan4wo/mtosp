@@ -1,4 +1,4 @@
-package com.zhangfan;
+package com.zhangfan.po;
 
 import com.zhangfan.dao.QueryIdDao;
 import org.springframework.beans.factory.annotation.Autowired;

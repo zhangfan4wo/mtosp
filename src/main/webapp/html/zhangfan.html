@@ -3,23 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
-<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
-<script src="http://cdn.bootcss.com/highcharts/4.2.6/modules/exporting.src.js"></script>
-<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
-<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="http://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
-<script src="http://cdn.bootcss.com/vue/2.0.0-rc.4/vue.min.js"></script>
-<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<scrip src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></scrip>
-<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
 <body>
-<div class="container" id="app">
+
+<div class="container" id="app" >
     <div class="alert alert-info alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        <button type="button" class="close" data-dismiss="alert" ><span
                 aria-hidden="true">&times;</span></button>
-        1
         <strong>Warning!</strong> 我是一个水果（提示框，或广告区）
     </div>
     <div class="row">
@@ -34,8 +26,6 @@
             </div><!-- /input-group -->
         </div><!-- /.col-lg-10 -->
     </div><!-- /.row -->
-
-
     <table class="table table-striped">
         <thead>
         <tr>
@@ -49,7 +39,7 @@
         <tboby>
             <tr v-for="item in list">
                 <td>{{item.id}}</td>
-                <td>{{item.url}}</td>
+                <td><a v-bind:href="item.url">{{item.url}}</a></td>
                 <td>
                     <div class="row">
                         <div class="col-lg-6">
@@ -60,9 +50,9 @@
                     </div><!-- /.row -->
                 </td>
                 <td>
-                    <div class="btn-group" >
-                        <button class="btn btn-default " type="button" v-on:click="jobid(item.id)" >执行</button>
-                        <button class="btn btn-default " type="button" v-on:click="stop(item.id)" >停止</button>
+                    <div class="btn-group">
+                        <button class="btn btn-default " type="button" v-on:click="jobid(item.id)">执行</button>
+                        <button class="btn btn-default " type="button" v-on:click="stop(item.id)">停止</button>
                     </div>
                 </td>
                 <td>
@@ -73,14 +63,16 @@
             </tr>
         </tboby>
     </table>
+    <div id="content" style="width:1100px;height:500px"></div>
+
+
+    <div id="content1" style="width: 550px; height: 400px; margin: 0 auto"></div>
+
     <div class="alert alert-info alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        <button type="button" class="close" data-dismiss="alert" ><span
                 aria-hidden="true">&times;</span></button>
-        1
         <strong>Warning!</strong> 我是一个水果（提示框，或广告区）
     </div>
-
-
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -106,159 +98,15 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-
-    <div id="cont" style="min-width:500px;height:400px"></div>
-
 </div>
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<!--<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>-->
+<script src="http://cdn.bootcss.com/highcharts/4.2.6/modules/exporting.src.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<script src="http://cdn.bootcss.com/vue/2.0.0-rc.4/vue.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="./script.js"></script>
+<!--<scrip src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></scrip>-->
 
-
-<script>
-
-    var vue = new Vue({
-        el: "#app",
-        data: {
-            list: [],
-            url: {},
-            id: {},
-        },
-        methods: {
-            search: function () {
-                api.search();
-            },
-            addURL: function (url) {
-                console.info(url);
-                var url = $("#text").val().toString();
-                if (url == "") {
-                    alert("请输入网址！");
-                    console.info(1)
-                } else {
-                    api.addURL(url)
-                }
-            },
-            delect: function (id, url) {
-                console.info($("#" + id).val(id));
-                if ($("#" + id).val(id) == "执行") {
-                    alert("请先停止执行任务！")
-                } else {
-                    api.delect(id, url)
-                }
-            },
-            jobid: function (id) {
-                api.jobid(id);
-
-            },
-            stop: function (id) {
-                api.stop(id);
-
-            }
-        }
-    });
-    var api = {
-        addURL: function (url) {
-            $.ajax({
-                type: 'post',
-                url: '/add',
-                data: {url: url},
-                error: function (requst) {
-                    alert("error")
-                },
-                success: function (data) {
-                    console.info(1)
-                }
-            })
-        },
-        search: function () {
-            $.ajax({
-                type: 'post',
-                url: "/demo",
-                datatype: 'json',
-
-                error: function (requst) {
-                    alert("error")
-                },
-                success: function (data) {
-                    console.info(data);
-                    vue.list = jQuery.parseJSON(data);
-                }
-            })
-        },
-        delect: function (id, url) {
-            $.ajax({
-                type: 'post',
-                url: "/del",
-                data: {id: id, url: url},
-                error: function (requst) {
-                    alert("error")
-                },
-                success: function (data) {
-                    console.info(1);
-                }
-            })
-        },
-        jobid: function (id) {
-            $.ajax({
-                type: 'post',
-                url: '/jobid',
-                data: {id: id},
-                error: function (requst) {
-                    alert("error")
-                },
-                success: function (data) {
-                    alert("监听成功！");
-                    console.info(data);
-                    $("#" + id).empty();
-                    $("#" + id).append("<option value=\"执行\">执行</option>");
-                }
-            })
-        },
-        stop: function (id) {
-            $.ajax({
-                type: 'post',
-                url: '/stop',
-                data: {id: id},
-                error: function (requst) {
-                    alert("error")
-                },
-                success: function (data) {
-                    console.info(data);
-                    alert("监听停止了！");
-                    $("#" + id).empty();
-                    $("#" + id).append("<option value=\"停止\">停止</option>");
-                }
-            })
-        }
-    };
-    api.search();
-
-    $(function () {
-        $('#container').highcharts({
-
-            title: {
-                text: 'Logarithmic axis demo'
-            },
-
-            xAxis: {
-                tickInterval: 1
-            },
-
-            yAxis: {
-                type: 'logarithmic',
-                minorTickInterval: 0.1
-            },
-
-            tooltip: {
-                headerFormat: '<b>{series.name}</b><br />',
-                pointFormat: 'x = {point.x}, y = {point.y}'
-            },
-
-            series: [{
-                data: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
-                pointStart: 1
-            }]
-        });
-    });
-
-
-</script>
 </body>
 </html>

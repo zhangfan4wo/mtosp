@@ -1,8 +1,8 @@
 package com.zhangfan.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.zhangfan.VistWeb;
-import com.zhangfan.WebPage;
+import com.zhangfan.core.VistWebApi;
+import com.zhangfan.po.WebPage;
 import com.zhangfan.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,10 +33,13 @@ public class DemoController {
     DelectNoDao delectNoDao;
     @Autowired
     JobQueryDao jobQueryDao;
+    @Autowired
+    DateJobDao dateJobDao;
+    @Autowired
+    VistWebApi vistWebApi;
 
 
-
-    ConcurrentMap<String,Timer> timerList=new ConcurrentHashMap<>();
+    ConcurrentMap<String, Timer> timerList = new ConcurrentHashMap<>();
     private Timer timer;
 
     @RequestMapping("demo")
@@ -61,40 +64,51 @@ public class DemoController {
         webPage.setId(queryIdDao);
         saveUrlDao.insetIntoUrl(webPage);
     }
+
     @RequestMapping("del")
     @ResponseBody
-    public void delect(Integer id,String url){
-        delectNoDao.delectNo(id,url);
-        if (timerList.get(id.toString())!=null){
+    public void delect(Integer id, String url) {
+        delectNoDao.delectNo(id, url);
+        if (timerList.get(id.toString()) != null) {
             timerList.get(id.toString()).cancel();
             timerList.remove(id.toString());
         }
     }
 
+
+
     @RequestMapping("jobid")
     @ResponseBody
-    public void jobinquery(Integer id){
-        VistWeb vistWeb = new VistWeb();
+    public void jobinquery(Integer id) {
         try {
-                if (timerList.containsKey(id.toString())){
-                    System.out.println("重复了!");
-                }else {
-                    timer=vistWeb.executeContent(jobQueryDao.queryJobQueryDao(id));
-                    timerList.put(id.toString(), timer);
-                }
+            if (timerList.containsKey(id.toString())) {
+                System.out.println("重复了!");
+            } else {
+                timer = vistWebApi.executeContent(jobQueryDao.queryJobQueryDao(id));
+                timerList.put(id.toString(), timer);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
+
     @RequestMapping("stop")
     @ResponseBody
     public void stoprun(Integer id) {
-        if (timerList.get(id.toString())!=null){
+        if (timerList.get(id.toString()) != null) {
             timerList.get(id.toString()).cancel();
             timerList.remove(id.toString());
-        }else {
+        } else {
             System.out.println("已经是停止状态了");
         }
+    }
+
+    @RequestMapping("date")
+    @ResponseBody
+    public Object datajob() {
+        List<Map<String, Object>> result = dateJobDao.querydata();
+        return JSON.toJSONString(result);
+
     }
 }
 

@@ -1,6 +1,6 @@
 package com.zhangfan.dao.impl;
 
-import com.zhangfan.WebPage;
+import com.zhangfan.po.WebPage;
 import com.zhangfan.dao.SaveUrlDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

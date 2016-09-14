@@ -3,11 +3,45 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+    <!--<script src="http://cdn.bootcss.com/highcharts/4.2.6/modules/exporting.src.js"></script>-->
     <script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
-    <script src="http://cdn.bootcss.com/highcharts/4.2.6/modules/exporting.src.js"></script>
+    <!--<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>-->
+    <script src="http://cdn.bootcss.com/vue/2.0.0-rc.4/vue.min.js"></script>
+    <!--<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    <scrip src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></scrip>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">-->
     <script>
+        var vue=new Vue({
+           el:"#app",
+            data:{
+                datelist:[],
+                messages:"hello"
+            },
+            methods:{
+                search: function () {
+                    api.search();
+                }
+            }
+        });
+        var api={
+            search: function () {
+                $.ajax({
+                    type: 'post',
+                    url: "/date",
+                    datatype: 'json',
+                    error: function (requst) {
+                        alert("error")
+                    },
+                    success: function (data) {
+                        console.info(data);
+                        vue.datelist = jQuery.parseJSON(data);
+                    }
+                })
+            }
+        };
         $(function () {
-            $('#container').highcharts({
+           var charts= $('#sd').highcharts({
                 title: {
                     text: '马坦、工信保网络ping值测试',
                     x: -20 //center
@@ -30,7 +64,7 @@
                     }]
                 },
                 tooltip: {
-                    valueSuffix: ''
+                    valueSuffix: '毫秒'
                 },
                 legend: {
                     layout: 'vertical',
@@ -39,23 +73,46 @@
                     borderWidth: 0
                 },
                 series: [{
-                    name: '马坦1',
-                    data: [70, 69, 95,70, 69, 95, 145, 182, 70, 69, 95,215, 252,12,12,121,21,2]
+                    name: 'SYS',
+                    data: [70, 69, 95,70, 69, 95, 145, 182, 70,23 , 95,215,23 ,12,12,23,21,2]
                 }, {
-                    name: '马坦2',
+                    name: 'BUI',
                     data: [70, 220, 248, 241, 201, 141, 86, 25]
                 }, {
-                    name: '工信宝',
+                    name: 'APP',
                     data: [ 135, 170, 186, 179, 143, 90, 39, 10]
                 }, {
-                    name: '马坦app',
-                    data: [94, 152, 145, 166, 142, 103, 66, 48]
+                    name: '马坦'
+                    /*data: [94, 152, 145, 166,23 , 103, 66, 48]*/
                 }]
             });
         });
+api.search();
     </script>
 </head>
 <body>
-<div id="container" style="min-width:700px;height:400px"></div>
+<div  id="app">
+    <h1>{{messages}}</h1>
+    <table>
+        <thead>
+        <tr>
+            <td>
+                1
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in datelist">
+            <td>
+                {{item.url}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+<div id="sd">
+
+</div>
+</div>
+
 </body>
 </html>
