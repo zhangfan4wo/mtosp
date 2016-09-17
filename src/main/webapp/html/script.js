@@ -244,7 +244,6 @@ var api = {
                 alert("error")
             },
             success: function (data) {
-                alert("监听成功！");
                 console.info(data);
                 $("#" + id).empty();
                 $("#" + id).append("<option value=\"执行\">执行</option>");
@@ -261,7 +260,6 @@ var api = {
             },
             success: function (data) {
                 console.info(data);
-                alert("监听停止了！");
                 $("#" + id).empty();
                 $("#" + id).append("<option value=\"停止\">停止</option>");
             }

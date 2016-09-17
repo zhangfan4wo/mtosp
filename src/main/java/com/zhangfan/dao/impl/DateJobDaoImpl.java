@@ -15,6 +15,6 @@ public class DateJobDaoImpl implements DateJobDao {
       @Autowired
     JdbcTemplate jdbcTemplate;
     public List<Map<String, Object>> querydata() {
-        return jdbcTemplate.queryForList("SELECT url,data FROM `ops_data` ORDER BY `star_date` DESC LIMIT 0, 20");
+        return jdbcTemplate.queryForList("SELECT url,date FROM `ops_date` ORDER BY `star_date` DESC LIMIT 0, 20");
     }
 }

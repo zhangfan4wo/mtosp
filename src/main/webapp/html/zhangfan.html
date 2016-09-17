@@ -29,8 +29,10 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <td>id</td>
-            <td>url</td>
+            <td>序号</td>
+            <td>地址</td>
+            <td>名称</td>
+            <td>执行</td>
             <td>状态</td>
             <td>操作</td>
             <td>删除网址</td>
@@ -40,6 +42,8 @@
             <tr v-for="item in list">
                 <td>{{item.id}}</td>
                 <td><a v-bind:href="item.url">{{item.url}}</a></td>
+                <td>{{item.name}}</td>
+                <td>{{item.flag}}</td>
                 <td>
                     <div class="row">
                         <div class="col-lg-6">
@@ -51,8 +55,10 @@
                 </td>
                 <td>
                     <div class="btn-group">
-                        <button class="btn btn-default " type="button" v-on:click="jobid(item.id)">执行</button>
-                        <button class="btn btn-default " type="button" v-on:click="stop(item.id)">停止</button>
+                        <button class="btn btn-default " type="button" v-on:click="jobid(item.id)" data-toggle="modal"
+                                data-target="#myModal">执行</button>
+                        <button class="btn btn-default " type="button" v-on:click="stop(item.id)" data-toggle="modal"
+                                data-target="#myModal">停止</button>
                     </div>
                 </td>
                 <td>

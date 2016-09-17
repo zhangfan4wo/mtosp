@@ -8,4 +8,6 @@ import java.util.Map;
  */
 public interface QueryZFDao {
     public List<Map<String,Object>> queryZF();
+
+    public List<Map<String,Object>> queryURL(String url);
 }

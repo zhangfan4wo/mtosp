@@ -6,6 +6,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.zhangfan.dao.NewDateDao;
+import com.zhangfan.dao.QueryZFDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.sun.xml.internal.ws.api.message.Packet.Status.Request;
+
 @Service
 public class VistWebApi {
 
@@ -27,6 +30,8 @@ public class VistWebApi {
 
     @Autowired
     private NewDateDao newDateDao;
+    @Autowired
+    private QueryZFDao queryZFDao;
 
     public Timer executeContent(final String url) throws ParseException {
 
@@ -37,6 +42,7 @@ public class VistWebApi {
             public void run() {
 
                 try {
+                    String name= String.valueOf(queryZFDao.queryURL(url));
                     URL u = new URL(url);
                     Long d1 = System.currentTimeMillis();
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -48,7 +54,7 @@ public class VistWebApi {
                     Long d2 = System.currentTimeMillis();
                     String code = Integer.toString(httpUrlConnection.getResponseCode());
                     String message = httpUrlConnection.getResponseMessage();
-                    System.out.println("----------------网站：" + url + "响应头---------------");
+                    System.out.println("----------------网站：" + name + "响应头---------------");
                     System.out.println("getResponseCode code =" + code);
                     System.out.println("getResponseMessage message =" + message);
                     if (!code.startsWith("2")) {

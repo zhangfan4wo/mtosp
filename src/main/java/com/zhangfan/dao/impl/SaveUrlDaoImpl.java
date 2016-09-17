@@ -18,7 +18,7 @@ public class SaveUrlDaoImpl implements SaveUrlDao {
 
         }else {
         }
-        jdbcTemplate.update("INSERT INTO `ops_url` (`id`, `url`) VALUES (?, ?)", new Object[]{webPage.getId(), webPage.getUrl()});
+        jdbcTemplate.update("INSERT INTO `ops_url` (`id`, `url`,`flag`) VALUES (?, ?,'N')", new Object[]{webPage.getId(), webPage.getUrl()});
 
     }
 }

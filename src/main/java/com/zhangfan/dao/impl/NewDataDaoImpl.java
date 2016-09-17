@@ -13,6 +13,6 @@ public class NewDataDaoImpl implements NewDateDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
     public void newdate(String url, String da, String date) {
-        jdbcTemplate.update("INSERT INTO `ops_data` (`url`, `star_date`, `data`) VALUES (?,?,?)",new Object[]{url,da,date});
+        jdbcTemplate.update("INSERT INTO `ops_date` (`url`, `star_date`, `date`) VALUES (?,?,?)",new Object[]{url,da,date});
     }
 }

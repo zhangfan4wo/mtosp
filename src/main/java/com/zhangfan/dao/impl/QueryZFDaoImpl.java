@@ -17,6 +17,10 @@ public class QueryZFDaoImpl  implements QueryZFDao {
     private JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> queryZF() {
-        return jdbcTemplate.queryForList("SELECT * FROM ops_url");
+        return jdbcTemplate.queryForList("SELECT * FROM ops_url ");
+    }
+
+    public List<Map<String, Object>> queryURL(String url) {
+        return jdbcTemplate.queryForList("SELECT `name` FROM ops_url WHERE url=?",new Object[]{url});
     }
 }

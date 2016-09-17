@@ -37,6 +37,8 @@ public class DemoController {
     DateJobDao dateJobDao;
     @Autowired
     VistWebApi vistWebApi;
+    @Autowired
+    FlagChangDao flagChangDao;
 
 
     ConcurrentMap<String, Timer> timerList = new ConcurrentHashMap<>();
@@ -80,6 +82,7 @@ public class DemoController {
     @RequestMapping("jobid")
     @ResponseBody
     public void jobinquery(Integer id) {
+        flagChangDao.flagNtoY(id);
         try {
             if (timerList.containsKey(id.toString())) {
                 System.out.println("重复了!");
@@ -95,6 +98,7 @@ public class DemoController {
     @RequestMapping("stop")
     @ResponseBody
     public void stoprun(Integer id) {
+        flagChangDao.flagYtoN(id);
         if (timerList.get(id.toString()) != null) {
             timerList.get(id.toString()).cancel();
             timerList.remove(id.toString());
